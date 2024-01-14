@@ -1,6 +1,6 @@
 import { CsvError, parse } from "csv-parse/browser/esm";
 import { render } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 
 const layouts = new Map([
   ["utf", (key) => <StringToUtf8CodePoint key={key} />],
@@ -69,6 +69,15 @@ function StringToUtf8CodePoint() {
 function CsvSplit() {
   const [input, setInput] = useState('"a","b","c"\n"1\n10","2","3"');
   const [output, setOutput] = useState([]);
+  const onFileInputChange = useCallback(
+    (e) => {
+      if (!e.target.files) return;
+      Promise.all(Array.from(e.target.files).map((f) => f.text()))
+        .then((texts) => texts.join("\n"))
+        .then(setInput);
+    },
+    [setInput]
+  );
   useEffect(() => {
     let shouldUpdate = true;
     parse(input, {}, (err, output) => {
@@ -95,6 +104,7 @@ function CsvSplit() {
           resize: "vertical",
         }}
       />
+      <input type="file" onChange={onFileInputChange} multiple />
       {output instanceof CsvError ? (
         <div>
           {output.code} {output.message}
