@@ -36,27 +36,29 @@ function StringToUtf8CodePoint() {
           resize: "vertical",
         }}
       />
-      <table>
+      <table style={{ textAlign: "center" }}>
         <thead>
           <tr>
+            <th>#</th>
             <th>Character</th>
             <th>UTF-16 Code Point</th>
           </tr>
         </thead>
         <tbody>
-          {[...input].map((char) => {
+          {[...input].map((char, i) => {
             const codePoint = char.codePointAt(0).toString(16).padStart(4, "0");
             return (
               <tr>
-                <th>
+                <th>{i}</th>
+                <td>
                   <a
                     href={`https://www.compart.com/en/unicode/U+${codePoint}`}
                     target="_blank"
                   >
                     {"'" + char + "'"}
                   </a>
-                </th>
-                <th>\u{codePoint}</th>
+                </td>
+                <td>\u{codePoint}</td>
               </tr>
             );
           })}
@@ -95,6 +97,7 @@ function CsvSplit() {
   }, [input]);
   return (
     <div>
+      <input type="file" onChange={onFileInputChange} multiple />
       <textarea
         value={input}
         onInput={(e) => setInput(e.target.value)}
@@ -104,29 +107,22 @@ function CsvSplit() {
           resize: "vertical",
         }}
       />
-      <input type="file" onChange={onFileInputChange} multiple />
       {output instanceof CsvError ? (
         <div>
           {output.code} {output.message}
         </div>
       ) : (
-        <table>
+        <table style={{ textAlign: "center" }}>
           <thead>
             <tr>
-              {[
-                ...Array(
-                  output
-                    .map((row) => row.length)
-                    .reduce((a, b) => Math.max(a, b), 0)
-                ).keys(),
-              ].map((_, i) => (
-                <td>{i}</td>
-              ))}
+              <th>#</th>
+              {output && output[0] && output[0].map((_, i) => <th>{i}</th>)}
             </tr>
           </thead>
           <tbody>
-            {output.map((row) => (
+            {output.map((row, i) => (
               <tr>
+                <th>{i}</th>
                 {row.map((cell) => (
                   <td>{JSON.stringify(cell)}</td>
                 ))}
