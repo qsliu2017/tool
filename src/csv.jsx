@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from "preact/hooks";
 export default function CsvSplit() {
   const [input, setInput] = useState('"a","b","c"\n"1\n10","2","3"');
   const [output, setOutput] = useState([]);
+  const [hiddenCols, setHiddenCols] = useState({});
+  const [hiddenRows, setHiddenRows] = useState({});
   const onFileInputChange = useCallback(
     (e) => {
       if (!e.target.files) return;
@@ -49,15 +51,41 @@ export default function CsvSplit() {
           <thead>
             <tr>
               <th>#</th>
-              {output && output[0] && output[0].map((_, i) => <th>{i}</th>)}
+              {output &&
+                output[0] &&
+                output[0].map((_, i) => (
+                  <th>
+                    <input
+                      type="checkbox"
+                      value={!!hiddenCols[i]}
+                      onChange={() =>
+                        setHiddenCols({ ...hiddenCols, [i]: !hiddenCols[i] })
+                      }
+                    />
+                    {hiddenCols[i] || i}
+                  </th>
+                ))}
             </tr>
           </thead>
           <tbody>
             {output.map((row, i) => (
               <tr>
-                <th>{i}</th>
-                {row.map((cell) => (
-                  <td>{JSON.stringify(cell)}</td>
+                <th>
+                  <th>
+                    <input
+                      type="checkbox"
+                      value={!!hiddenRows[i]}
+                      onChange={() =>
+                        setHiddenRows({ ...hiddenRows, [i]: !hiddenRows[i] })
+                      }
+                    />
+                    {hiddenRows[i] || i}
+                  </th>
+                </th>
+                {row.map((cell, j) => (
+                  <td>
+                    {hiddenRows[i] || hiddenCols[j] || JSON.stringify(cell)}
+                  </td>
                 ))}
               </tr>
             ))}
