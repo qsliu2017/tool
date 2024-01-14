@@ -10,6 +10,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "csv-parse": "^5.5.3",
     "preact": "^10.19.3"
   },
   "devDependencies": {
