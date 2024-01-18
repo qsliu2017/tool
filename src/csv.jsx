@@ -33,6 +33,12 @@ export default function CsvSplit() {
   return (
     <div>
       <input type="file" onChange={onFileInputChange} multiple />
+      <span>
+        <a href="https://shell.duckdb.org/" target="_blank">
+          DuckDB
+        </a>
+        <code>.files add</code>
+      </span>
       <textarea
         value={input}
         onInput={(e) => setInput(e.target.value)}
