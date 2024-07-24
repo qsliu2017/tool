@@ -4,8 +4,9 @@ import { useState } from "preact/hooks";
 
 const CsvSplit = lazy(() => import("./csv"));
 const StringToUtf8CodePoint = lazy(() => import("./utf"));
+const SpacingCJK = lazy(() => import("./spacing"));
 
-const layouts = ["utf", "csv"];
+const layouts = ["utf", "csv", "spacing"];
 
 render(<App />, document.getElementById("app"));
 
@@ -23,6 +24,8 @@ function App() {
           <StringToUtf8CodePoint key="utf" />
         ) : layout === "csv" ? (
           <CsvSplit key="csv" />
+        ) : layout === "spacing" ? (
+          <SpacingCJK key="spacing" />
         ) : (
           <div>Unknown</div>
         )}
